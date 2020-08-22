@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const express = require('express');
 const port = process.env.PORT || 8080;
 const app = express();
+const apiIde = require("./routes/ide");
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -22,9 +23,7 @@ app.use((req, res, next) => {
         });
 app.use(express.static(__dirname + '/public'));
 
-const apiIde = require("./routes/ide");
 app.use('/api/ide', apiIde);
-
 
 
 app.listen(port)
