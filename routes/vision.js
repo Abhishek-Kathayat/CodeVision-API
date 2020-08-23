@@ -7,7 +7,7 @@ const vision = require('@google-cloud/vision');
 
 const upload = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads");
+        cb(null, "./uploads");
     },
     filename: (req, file, cb) => {
         const name = file.originalname.substring(0, file.originalname.lastIndexOf("."))
@@ -77,7 +77,7 @@ router.get("/*", (req, res) => {
 async function textDetection(filename){
     console.log(filename);
     const client = new vision.ImageAnnotatorClient();
-    const [result] = await client.textDetection("uploads/"+filename);
+    const [result] = await client.textDetection("./uploads/"+filename);
     const detections = result.textAnnotations;
     return detections[0].description;
 }
@@ -86,7 +86,7 @@ async function documentTextDetection(filename){
     console.log(filename);
     const client = new vision.ImageAnnotatorClient();
     console.log("pont1");
-    const [result] = await client.documentTextDetection("uploads/"+filename);
+    const [result] = await client.documentTextDetection("./uploads/"+filename);
     const fullTextAnnotation = result.fullTextAnnotation;
     return `${fullTextAnnotation.text}`;
 }
