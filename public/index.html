@@ -78,7 +78,7 @@
             
             $.ajax({
                 type: "POST",
-                url: "/api/code/run",
+                url: window.location.origin+"/api/code/run",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: JSON.stringify(data),
@@ -107,7 +107,7 @@
             
             $.ajax({
                 type: "POST",
-                url: "/api/code/compile",
+                url: window.location.origin+"/api/code/compile",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: JSON.stringify(data),
@@ -137,7 +137,7 @@
             }
             $.ajax({
                 type: "POST",
-                url: "/api/vision/upload/written",
+                url: window.location.origin+"/api/vision/upload/written",
                 processData: false,
                 contentType: false,
                 data: data,
@@ -166,7 +166,7 @@
             
             $.ajax({
                 type: "POST",
-                url: "/api/vision/upload/printed",
+                url: window.location.origin+"/api/vision/upload/printed",
                 processData: false,
                 contentType: false,
                 data: data,
