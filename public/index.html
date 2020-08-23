@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <style>
+        
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row text-center m-3 text-info text-bold">
+            <h2 class="mx-auto">CodeVision</h2>
+        </div>
+        <div class="row">   
+            <div class="col-6">
+                <h4>For printed</h4>
+                <input type="file" name="imageData" id="printedImg">
+                <button class="btn btn-primary" onclick="printClick()">Upload</button>
+            </div>
+            <div class="col-6">
+                <h4>For written</h4>
+                <input type="file" name="imageData" id="writtenImg">
+                <button class="btn btn-primary" onclick="writtenClick()">Upload</button>
+            </div>
+        </div>
+        <div class="row p-3">
+            <div class="col-6 p-3" id="editor-div" >
+                <h4>Code Editor</h4>
+                <div class="col-12">
+                    <textarea style="border: 1px solid gray" id="editor" cols="70" rows="20"></textarea>
+                </div>
+                <div class="col-12">
+                    Select Language: 
+                    <select id="language">
+                        <option value="C">C</option>
+                        <option value="CPP">CPP</option>
+                        <option value="CSHARP">C#</option>
+                        <option value="JAVA8">JAVA 8</option>
+                        <option value="JAVASCRIPT_NODE">JAVASCRIPT</option>
+                        <option value="PHP">PHP</option>
+                        <option value="PYTHON">PYTHON</option>
+                        <option value="PYTHON3">PYTHON 3</option>
+                        <option value="R">R</option>
+                        <option value="RUBY">RUBY</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="compile()">Compile</button>
+                    <button class="btn btn-primary" onclick="run()">Run</button>
+                </div>
+                <br>
+            </div>
+            <div class="col-6 p-3" id="output-div" style="display: none;">
+                <h4>Output</h4>
+                <div class="col-12">
+                    <textarea style="border: 1px solid gray" id="output" cols="70" rows="20"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <script>
+        function run(){
+            var data = {
+                data:{
+                    code: $("#editor").val(),
+                    language: $("#language").val(),
+                }
+            };
+            
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/code/run",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (r) {
+                    console.log("here", r);
+                    $("#output-div").show();
+                    $("#output").val(r.message+"\n"+ r.compile_status+"\nOutput:\n"+r.output );
+                },
+                error: function (r) {
+                    console.log("error", r);
+                },
+                failure: function (r) {
+                    alert('failure');
+                    console.log(r);
+                }
+            });
+
+        }
+        function compile(){
+            var data = {
+                data:{
+                    code: $("#editor").val(),
+                    language: $("#language").val(),
+                }
+            };
+            
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/code/compile",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (r) {
+                    console.log("here", r);
+                    $("#output-div").show();
+                    $("#output").val(r.message+"\n"+ r.compile_status );
+                },
+                error: function (r) {
+                    console.log("error", r);
+                },
+                failure: function (r) {
+                    alert('failure');
+                    console.log(r);
+                }
+            });
+
+        }
+
+        function writtenClick(){
+            var fileData = ($("#writtenImg")[0].files[0]);
+            var data = new FormData();
+            data.append("imageData", fileData);
+            console.log(data);
+            for(var pair of data.entries()) {
+                console.log(pair[0]+', '+pair[1]);
+            }
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/vision/upload/written",
+                processData: false,
+                contentType: false,
+                data: data,
+                success: function (r) {
+                    console.log("here", r);
+                    $("#editor-div").show();
+                    $("#editor").val(r.data);
+                },
+                error: function (r) {
+                    console.log("error", r);
+                },
+                failure: function (r) {
+                    alert('failure');
+                    console.log(r);
+                }
+            });
+        }
+        function printClick(){
+            var fileData = ($("#printedImg")[0].files[0]);
+            var data = new FormData();
+            data.append("imageData", fileData);
+            console.log(data);
+            for(var pair of data.entries()) {
+                console.log(pair[0]+', '+pair[1]);
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/vision/upload/printed",
+                processData: false,
+                contentType: false,
+                data: data,
+                success: function (r) {
+                    console.log("here", r);
+                    $("#editor-div").show();
+                    $("#editor").val(r.data);
+                },
+                error: function (r) {
+                    console.log("error", r);
+                },
+                failure: function (r) {
+                    alert('failure');
+                    console.log(r);
+                }
+            });
+            
+
+        }
+
+    </script>
+</body>
+</html>

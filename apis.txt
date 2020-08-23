@@ -1,0 +1,63 @@
+Image Processing
+
+Request = POST
+
+For printed
+url = http://35.226.38.50/api/vision/upload/printed
+For handwritten
+url = http://35.226.38.50/api/vision/upload/written
+
+content-type
+multipart/form-data
+{
+    imageData: <FILE>
+}
+
+Response:
+{
+    data: "Dummy REsponse TExt\nI am on new line"
+}
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Code Processing
+
+Request = POST
+
+For compilation
+url = http://35.226.38.50/api/code/compile
+
+content-type
+application/json
+{
+    data: {
+        code: <SOURCE_CODE>,
+        language: <LANGUAGE_CODES>
+    }
+}
+
+Response:
+{
+    compile_status: <STATUS_TEXT>,
+    message: 'Code compiled successfully'
+}
+------------------------------------------------------
+For Run
+url = http://35.226.38.50/api/code/run
+content-type
+application/json
+{
+    data: {
+        code: <SOURCE_CODE>,
+        language: <LANGUAGE_CODES>,
+        input: <INPUT_IN_CODE> //if any otherwise send ""
+    }
+}
+
+Response:
+{
+    compile_status: <STATUS_TEXT>,
+    message: 'Code ran successfully'
+    output: <OUTPUT>,
+    output_html: <OUTPUT_IN_HTML>,
+}
+

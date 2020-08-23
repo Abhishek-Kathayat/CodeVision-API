@@ -3,7 +3,9 @@ const morgan = require('morgan');
 const express = require('express');
 const port = process.env.PORT || 8080;
 const app = express();
-const apiroute = require("./routes/code");
+
+const apiCode = require("./routes/code");
+const apiVision = require("./routes/vision");
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -18,13 +20,13 @@ app.use((req, res, next) => {
         "Access-Control-Allow-Methods",
         "GET, POST, PATCH, PUT, DELETE, OPTIONS"
     );
-    // console.log("Next doing");
     next();
 });
 
 app.use(express.static(__dirname + '/public'));
 
-app.use('/codevision', apiroute);
+app.use('/api/code', apiCode);
+app.use('/api/vision', apiVision);
 
 
 app.listen(port).once("listening", () => {
